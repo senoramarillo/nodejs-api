@@ -4,8 +4,11 @@ import Category from "../../../../../lib/modals/category";
 import { NextResponse } from "next/server";
 import { Types } from "mongoose";
 
-export const PATCH = async (request: Request, context: { params: any }) => {
-  const categoryId = context.params.category;
+type Params = Promise<{ category: string }>;
+
+export const PATCH = async (request: Request, context: { params: Params }) => {
+  const params = await context.params;
+  const categoryId = params.category;
 
   try {
     const body = await request.json();
@@ -62,15 +65,17 @@ export const PATCH = async (request: Request, context: { params: any }) => {
       }),
       { status: 200 }
     );
-  } catch (error: any) {
-    return new NextResponse("Error in updating category" + error.message, {
+  } catch (error: unknown) {
+    const e = error as Error;  
+    return new NextResponse("Error in updating category" + e.message, {
       status: 500,
     });
   }
 };
 
-export const DELETE = async (request: Request, context: { params: any }) => {
-  const categoryId = context.params.category;
+export const DELETE = async (request: Request, context: { params: Params }) => {
+  const params = await context.params;
+  const categoryId = params.category;
 
   try {
     const { searchParams } = new URL(request.url);
@@ -117,8 +122,9 @@ export const DELETE = async (request: Request, context: { params: any }) => {
       JSON.stringify({ message: "Category is deleted" }),
       { status: 200 }
     );
-  } catch (error: any) {
-    return new NextResponse("Error in deleting category" + error.message, {
+  } catch (error: unknown) {
+    const e = error as Error;  
+    return new NextResponse("Error in deleting category" + e.message, {
       status: 500,
     });
   }

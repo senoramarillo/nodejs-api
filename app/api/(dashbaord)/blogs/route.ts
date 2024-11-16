@@ -13,8 +13,8 @@ export const GET = async (request: Request) => {
     const searchKeywords = searchParams.get("keywords") as string;
     const startDate = searchParams.get("startDate");
     const endDate = searchParams.get("endDate");
-    const page: any = parseInt(searchParams.get("page") || "1");
-    const limit: any = parseInt(searchParams.get("limit") || "10");
+    const page: number = parseInt(searchParams.get("page") || "1");
+    const limit: number = parseInt(searchParams.get("limit") || "10");
 
     if (!userId || !Types.ObjectId.isValid(userId)) {
       return new NextResponse(
@@ -48,7 +48,7 @@ export const GET = async (request: Request) => {
       );
     }
 
-    const filter: any = {
+    const filter: { [key: string]: unknown }  = {
       user: new Types.ObjectId(userId),
       category: new Types.ObjectId(categoryId),
     };
@@ -89,8 +89,9 @@ export const GET = async (request: Request) => {
     return new NextResponse(JSON.stringify({ blogs }), {
       status: 200,
     });
-  } catch (error: any) {
-    return new NextResponse("Error in fetching blogs" + error.message, {
+  } catch (error: unknown) {
+    const e = error as Error;
+    return new NextResponse("Error in fetching blogs" + e.message, {
       status: 500,
     });
   }
@@ -149,8 +150,9 @@ export const POST = async (request: Request) => {
       JSON.stringify({ message: "Blog is created", blog: newBlog }),
       { status: 200 }
     );
-  } catch (error: any) {
-    return new NextResponse("Error in fetching blogs" + error.message, {
+  } catch (error: unknown) {
+    const e = error as Error;
+    return new NextResponse("Error in fetching blogs" + e.message, {
       status: 500,
     });
   }

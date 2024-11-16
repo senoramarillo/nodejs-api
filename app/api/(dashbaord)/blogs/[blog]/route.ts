@@ -5,8 +5,11 @@ import Blog from "../../../../../lib/modals/blog";
 import { NextResponse } from "next/server";
 import { Types } from "mongoose";
 
-export const GET = async (request: Request, context: { params: any }) => {
-  const blogId = context.params.blog;
+type Params = Promise<{ blog: string }>;
+
+export const GET = async (request: Request, context: { params: Params }) => {
+  const params = await context.params;
+  const blogId = params.blog;
 
   try {
     const { searchParams } = new URL(request.url);
@@ -67,16 +70,18 @@ export const GET = async (request: Request, context: { params: any }) => {
     return new NextResponse(JSON.stringify({ blog }), {
       status: 200,
     });
-  } catch (error: any) {
-    return new NextResponse("Error in fetching a blog" + error.message, {
+  } catch (error: unknown) {
+    const e = error as Error;
+    return new NextResponse("Error in fetching a blog" + e.message, {
       status: 500,
     });
   }
 };
 
-export const PATCH = async (request: Request, context: { params: any }) => {
-  const blogId = context.params.blog;
-  
+export const PATCH = async (request: Request, context: { params: Params }) => {
+  const params = await context.params;
+  const blogId = params.blog;
+
   try {
     const body = await request.json();
     const { title, description } = body;
@@ -124,15 +129,18 @@ export const PATCH = async (request: Request, context: { params: any }) => {
       JSON.stringify({ message: "Blog updated", blog: updatedBlog }),
       { status: 200 }
     );
-  } catch (error: any) {
-    return new NextResponse("Error updating blog" + error.message, {
+  } catch (error: unknown) {
+    const e = error as Error;
+    return new NextResponse("Error updating blog" + e.message, {
       status: 500,
     });
   }
 };
 
-export const DELETE = async (request: Request, context: { params: any }) => {
-  const blogId = context.params.blog;
+export const DELETE = async (request: Request, context: { params: Params }) => {
+  const params = await context.params;
+  const blogId = params.blog;
+
   try {
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get("userId");
@@ -171,8 +179,9 @@ export const DELETE = async (request: Request, context: { params: any }) => {
     return new NextResponse(JSON.stringify({ message: "Blog is deleted" }), {
       status: 200,
     });
-  } catch (error: any) {
-    return new NextResponse("Error in deleting blog" + error.message, {
+  } catch (error: unknown) {
+    const e = error as Error;
+    return new NextResponse("Error in deleting blog" + e.message, {
       status: 500,
     });
   }

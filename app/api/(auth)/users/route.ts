@@ -10,8 +10,9 @@ export const GET = async () => {
     await connect();
     const users = await User.find();
     return new NextResponse(JSON.stringify(users), { status: 200 });
-  } catch (error: any) {
-    return new NextResponse("Error in fetching users" + error.message, {
+  } catch (error: unknown) {
+    const e = error as Error; 
+    return new NextResponse("Error in fetching users" + e.message, {
       status: 500,
     });
   }
@@ -28,8 +29,9 @@ export const POST = async (req: Request) => {
       JSON.stringify({ message: "User is created", user: newUser }),
       { status: 200 }
     );
-  } catch (error: any) {
-    return new NextResponse("Error in creating user" + error.message, {
+  } catch (error: unknown) {
+    const e = error as Error; 
+    return new NextResponse("Error in creating user" + e.message, {
       status: 500,
     });
   }
@@ -71,8 +73,9 @@ export const PATCH = async (req: Request) => {
       JSON.stringify({ message: "User is updated", user: updatedUser }),
       { status: 200 }
     );
-  } catch (error: any) {
-    return new NextResponse("Error in updating user" + error.message, {
+  } catch (error: unknown) {
+    const e = error as Error; 
+    return new NextResponse("Error in updating user" + e.message, {
       status: 500,
     });
   }
@@ -112,8 +115,9 @@ export const DELETE = async (request: Request) => {
       JSON.stringify({ message: "User is deleted", user: deletedUser }),
       { status: 200 }
     );
-  } catch (error: any) {
-    return new NextResponse("Error in deleting user" + error.message, {
+  } catch (error: unknown) {
+    const e = error as Error; 
+    return new NextResponse("Error in deleting user" + e.message, {
       status: 500,
     });
   }

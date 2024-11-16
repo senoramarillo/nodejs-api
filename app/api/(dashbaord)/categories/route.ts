@@ -37,8 +37,9 @@ export const GET = async (request: Request) => {
     return new NextResponse(JSON.stringify(categories), {
       status: 200,
     });
-  } catch (error: any) {
-    return new NextResponse("Error in fetching categories" + error.message, {
+  } catch (error: unknown) {
+    const e = error as Error;  
+    return new NextResponse("Error in fetching categories" + e.message, {
       status: 500,
     });
   }
@@ -79,8 +80,9 @@ export const POST = async (request: Request) => {
       JSON.stringify({ message: "Category is created", category: newCategory }),
       { status: 200 }
     );
-  } catch (error: any) {
-    return new NextResponse("Error in creating category" + error.message, {
+  } catch (error: unknown) {
+    const e = error as Error;  
+    return new NextResponse("Error in creating category" + e.message, {
       status: 500,
     });
   }
